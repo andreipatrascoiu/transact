@@ -1,0 +1,6 @@
+dump
+build
+node_modules
+server/resources/doc
+source
+*tar.gz

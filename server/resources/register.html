@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Register user</title>
+
+	<link rel='stylesheet' href='https://codepen.io/assets/libs/fullpage/jquery-ui.css'>
+	<link rel="stylesheet" href="css/style.css">
+  <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/auth.js"></script>
+
+</head>
+
+<body>
+
+  <div class="login-card">
+  
+    <h1>Register user</h1><br>
+    <form>
+      <input type="text" id="user" name="user" placeholder="User name" required>
+      <input type="text" id="name" name="name" placeholder="Display name" required>
+      <input type="password" id="pass" name="pass" placeholder="Password" required>
+      <input type="password" id="passCheck" name="passCheck" placeholder="Retype password" required>
+      <input type="text" id="easyPayUser" name="easyPayUser" placeholder="EasyPay user" required>
+      <input type="text" id="easyPayAccount" name="easyPayAccount" placeholder="EasyPay account" required>
+      <input type="text" id="descr" name="descr" placeholder="Description">
+      
+      <div id="error"></div>
+      <input type="button" name="register" class="login login-submit" value="Register Account" onclick="createUser()">
+      <div class="login-help">
+         <a href="/">Skip</a>
+      </div>
+    </forom>
+  </div>
+  <script src='https://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
+</body>
+
+</html>

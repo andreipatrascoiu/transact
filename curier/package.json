@@ -1,0 +1,10 @@
+{
+    "name": "curier",
+    "version": "0.0.1",
+    "main": "curier.js",
+    "private": true,
+
+    "plugin": {
+        "provides": ["curier"]
+    }
+}

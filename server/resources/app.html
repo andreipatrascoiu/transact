@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="transactApp">
+	
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Transact</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/shop-item.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+    
+      <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="sessionController">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <p class="navbar-brand" ng-if='user.username'>Logged in as {{user.name}}</p>
+                <p class="navbar-brand" ng-if='!user.username'>Not logged in</p>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/">Offers</a>
+                    </li>
+                    <li ng-if="user.username">
+                        <a href="#/myaccount">My account</a>
+                    </li>
+                    <li ng-if="user.username">
+                        <a href="#/add">Add offer</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="logout()" ng-if="user.username">Logout</a>
+                        <a href="/login" ng-if="!user.username">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <ng-view></ng-view>
+        </div>
+    </div>
+    
+    <!-- Templates -->
+    <script type="text/ng-template" id="offers.html">
+        <div class="col-md-3">
+            <p class="lead">Transact</p>
+                <div class="list-group">
+                    <a ng-click="changeCategory('electronics')" class="list-group-item active" id="electronics">Electronics</a>
+                    <a ng-click="changeCategory('clothes')" class="list-group-item" id="clothes">Clothes</a>
+                    <a ng-click="changeCategory('other')" class="list-group-item" id="other">Other</a>
+                </div>
+        </div>
+                
+        <div class="col-md-9" id="offers">
+                
+            <div class="thumbnail" ng-repeat="offer in offers">
+                  <div class="caption-full">
+                      <h4 class="pull-right">RON {{offer.price}}</h4>
+                      <h4><a href="#/offer/{{activeCategory}}/{{offer.id}}">{{offer.name}}</a></h4>
+                      <p>{{offer.description}}</p>
+                  </div>
+            </div>
+            
+            <br>
+            <a href="javascript:void(0);" ng-click="previousPage()" ng-if="count > 5 && startIndex >= 5">Previous page</a>
+            <a href="javascript:void(0);"ng-click="nextPage()" ng-if="count > 5 && startIndex + 5 < count">Next page</a>
+            
+            <br ng-if="count == 0">
+            <h4 ng-if="count == 0">No offers to display!</h4>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="offer.html">
+        <div class="col-md-9">
+            <div class="well">
+                <div class="thumbnail">
+                    <div class="caption-full">
+                        <h4 class="pull-right">RON {{offer.price}}</h4>
+                        <h4>{{offer.name}}</h4>
+                        <p>{{offer.description}}</p>
+                        <br>
+                        Posted by <b>{{offer.username}}</b>
+                    </div>
+                </div>
+			    <div id="mapCanvas" style="width:500px; height:500px"></div>
+			        <br>
+                    Select the date for meeting with the seller:
+                    <select name="date">
+                        <option ng-repeat="date in offer.dates">{{date}}</option>
+                    </select>
+                    <br>
+                    Select delivery method:
+                    <select name="delivery">
+                        <option value="personal" selected>Personal</option>
+                        <option value="curier">Curier</option>
+                    </select>
+                    <input ng-if="user.username && user.username != offer.username" type="button" ng-click="buy()" value="Buy">
+                </div>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="addoffer.html">
+        <div class="col-md-9">
+            <div class="well">
+                <form id='offer' METHOD="post" action="add">
+                    <table id="mainTable">
+                        <tr>
+                            <td>Name:</td>
+                            <td><input type="text" id="name" name="name"></td>
+                            <td><div id="nameErr"></div></td>
+			            </tr>
+                        <tr>
+                            <td>Description:</td>
+                            <td><textarea id="descr" rows="4" cols="50" name="descr"></textarea></td>
+                            <td><div id="descrErr"></div></td>
+			            </tr>
+                        <tr>
+                            <td>Price:</td>
+                            <td><input type="text" id="price" name="price"></td>
+                            <td><div id="priceErr"></div></td>
+			            </tr>
+			            <tr>
+                            <td>Category:</td>
+                            <td>
+                                <select id="category" name="category">
+                                    <option value="electronics">Electronics</option>
+                                    <option value="clothes">Clothes</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </td>
+			            </tr>
+			            <tr>
+                            <td>Meeting dates:</td>
+                            <td>
+                                <input type="date" id="date1" name="dates">
+                                <input type="time" id="time1" name="times">
+                            </td>
+                            <td><div id="date1Err"></div></td>
+			            </tr>
+			        </table>
+		            <br>
+			        <td><input type="button" value="Add date" onClick="addDate()"></td>
+			        <br><br>
+		            Select meeting place:
+			        <br>
+			        <div id="mapCanvas" style="width:500px; height:500px"></div>
+			        <br>
+			        <td><div id="mapErr"></div></td>
+			        <br>
+			        <input type="button" value="Save" onclick="submitOffer()">
+			    </form>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="myaccount.html">
+        <div class="col-md-9">
+            <div class="well">
+                <table id="userTable">
+                    <tr>
+                        <td>Username: </td>
+                        <td>{{user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>Name: </td>
+                        <td>{{user.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Description: </td>
+                        <td>{{user.description}}</td>
+                    </tr>
+                    <tr>
+                        <td>E-mail: </td>
+                        <td>{{user.email}}</td>
+                    </tr>
+               </table>
+            </div>
+        </div>
+    </script>
+
+    <div class="container">
+        <hr>
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright © Transact 2015</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- /.container -->
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
+    <script type="text/javascript" src="js/controllers.js"></script>
+    <script type="text/javascript" src="js/addoffer.js"></script>
+
+</body>
+
+</html>

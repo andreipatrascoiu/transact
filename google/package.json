@@ -1,0 +1,10 @@
+{
+    "name": "google",
+    "version": "0.0.1",
+    "main": "google.js",
+    "private": true,
+
+    "plugin": {
+        "provides": ["google"]
+    }
+}

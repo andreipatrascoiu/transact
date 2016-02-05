@@ -1,0 +1,10 @@
+{
+    "name": "easypay",
+    "version": "0.0.1",
+    "main": "easypay.js",
+    "private": true,
+
+    "plugin": {
+        "provides": ["easypay"]
+    }
+}
