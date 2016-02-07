@@ -108,8 +108,8 @@ function createEventFunc(tokens, email1, email2, date, position, offerName) {
  /**
   * Google API startup (integrates Google Maps, Mail and Calendar)
   * @param options
- * @param imports
- * @param register
+  * @param imports
+  * @param register
   */
 
 function startup(options, imports, register) {

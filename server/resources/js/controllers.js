@@ -122,7 +122,7 @@ angular.module("transactControllers", [])
         $scope.buy = function() {
           $http.post('/buy', {category : $scope.category, id : $scope.id,
                               date : document.getElementsByName('date')[0].value,
-                              offeringUser : $scope.offer.username, offerName : $scope.offer.offerName,
+                              offeringUser : $scope.offer.username, offerName : $scope.offer.name,
                               delivery : document.getElementsByName('delivery')[0].value})
                     .success(function(response) {
                       window.alert(response.message);

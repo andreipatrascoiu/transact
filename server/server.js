@@ -3,27 +3,13 @@
  * @module server
  */
 
-/**
- * Function redirectApp
- * Redirect to app page
- * @param req HTTP request
- * @param resp HTTP response
- * @param next next controller
- */
- function redirectApp(req, resp, next) {
-      resp.sendfile(__dirname + '/resources/app.html');
-    }
+function redirectApp(req, resp, next) {
+  resp.sendfile(__dirname + '/resources/app.html');
+}
   
-  /**
- * Function redirectLogin
- * Redirect to app page
- * @param req HTTP request
- * @param resp HTTP response
- * @param next next controller
- */  
-  function redirectLogin(req, resp, next) {
-      resp.sendfile(__dirname + '/resources/login.html');
-    }
+function redirectLogin(req, resp, next) {
+  resp.sendfile(__dirname + '/resources/login.html');
+}
 
 /**
  * Server startup. Initializes DB connection and express. Also contains methods
@@ -63,17 +49,30 @@ function startup(options, imports, register) {
     app.set('view engine', 'ejs');
     app.set('views', __dirname+'/views');
     
-    /*Documentation*/
+    /**
+     * @function GET / - The main page of the application.
+     */
+    app.get("/", redirectApp);
+    
+    /**
+     * @function GET /doc - Returns the documentation of the project.
+     */
     app.get('/doc', function (req, resp, next) {
       resp.sendfile(__dirname +'resources/doc/index.html');
     });
     
-    /* Main page */
-    app.get("/", redirectApp);
-    
-    /* Login/logout code */
+    /**
+     * @function GET /login - Returns the login page.
+     */
     app.get("/login", redirectLogin);
     
+    /**
+     * @function POST /login - Performs the login.
+     * Params are sent in the body.
+     * @param {string} username
+     * @param {string} password
+     * @return "OK" if the username and password match or an error description otherwise
+     */
     app.post("/login", function(req, resp, next) {
       var username = req.body.user;
       var password = req.body.pass;
@@ -88,11 +87,20 @@ function startup(options, imports, register) {
       });
     });
     
+    /**
+     * @function GET /myaccount - Information about the logged in account.
+     * @return JSON object with account information
+     */
     app.get("/myaccount", function(req, resp, next) {
       resp.json({'user': req.session.user});
     });
     
-    /* Get offers code */
+    /**
+     * @function GET /offer - Information about a certain offer.
+     * @param {string} id offer ID
+     * @param {string} category offer category
+     * @return JSON object with information about the offer
+     */
     app.get("/offer", function(req, resp, next) {
       var category = req.query.category;
       var id = Number(req.query.id);
@@ -107,6 +115,14 @@ function startup(options, imports, register) {
       });
     });
     
+    /**
+     * @function POST /offers - Return a list of offers.
+     * The parameters are in the body.
+     * @param {int} from the index of the ordered list of offers from which to start
+     * @param {string} category offer category
+     * @param {int} numOffers the number of offers to return
+     * @return JSON array with the specified number of offers from the category and from the given index and the total number of offers in the given category
+     */
     app.post("/offers", function(req, resp, next) {
       var category = req.body.category;
       var from = Number(req.body.from);
@@ -121,7 +137,17 @@ function startup(options, imports, register) {
       });
     });
     
-    /* Add offers code */
+    /**
+     * @function POST /add - Add a new offer.
+     * The parameters are in the body.
+     * @param {string} name the name of the offer
+     * @param {string} category offer category
+     * @param {int} price offer price
+     * @param {string} description offer description
+     * @param {JSON} position JSON object containing the latitude (lat) and longitude (lng)
+     * @param {Array} dates JSON array with available times
+     * @return "Offer created" if the operation was successful or an error description otherwise
+     */
     app.post("/add", function(req, resp, next) {
       var name = req.body.name;
       var price = req.body.price;
@@ -148,11 +174,23 @@ function startup(options, imports, register) {
         });
     });
     
-    /* Register code */
+    /**
+     * @function GET /register - Return the register page.
+     */
     app.get("/register", function(req, resp, next) {
       resp.sendfile(__dirname + '/resources/register.html');
     });
     
+    /**
+     * @function POST /register - Register a new user.
+     * The parameters are in the body.
+     * @param {string} user new username
+     * @param {string} name user display name
+     * @param {strin} pass user password
+     * @param {string} easyPayUser EasyPay username
+     * @param {string} easyPayAccount EasyPay account number
+     * @return "OK" if the operation was successful or an error description otherwise.
+     */
     app.post("/register", function(req, resp, next) {
       var username = req.body.user;
       var name = req.body.name;
@@ -217,12 +255,20 @@ function startup(options, imports, register) {
       });
     });
     
+    /**
+     * @function GET /register_google - API must be called after a successful register in order to complete the process.
+     * @param {string} user username of the newly created user
+     */
     app.get("/register_google", function(req, resp, next) {
       var user = req.query.user;
       var url = google.getAuthorization(user);
       resp.redirect(url);
     });
     
+    /**
+     * @function GET /login1 - API called by Google after the user gives permission for the Transact application.
+     * @param {string} code Google authorization code
+     */
     app.get("/login1", function(req, resp, next) {
       var authorizationCode = req.query.code;
       
@@ -254,7 +300,17 @@ function startup(options, imports, register) {
       }
     });
     
-    /* Buy code */
+    /**
+     * @function POST /buy - Purchase an offer.
+     * The parameters are in the body.
+     * @param {string} category offer category
+     * @param {int} id offer ID
+     * @param {string} date the selected date for the purchase
+     * @param {string} offeringUser the user offering the offer
+     * @param {string} offerName the name of the offer
+     * @param {string} delivery the method of delivery (curier or personal)
+     * @return JSON object containing a message with the outcome of the operatio.
+     */
     app.post("/buy", function(req, resp, next) {
       var category = req.body.category;
       var id = Number(req.body.id);
@@ -300,7 +356,7 @@ function startup(options, imports, register) {
                   google.createEvent(user.tokens, user.email, offeringUser.email, date, offer.position, offerName);
                   db.removeOffer(category, id, function(success) {
                     if (success) {
-                      resp.json({'message':'Purchase successful! A notification has been created in Google Calendar!'});
+                        resp.json({'message':'Purchase successful! A notification has been created in Google Calendar!'});
                     } else {
                       resp.json({'message':'There\'s been a problem with the purchase!'});
                     }

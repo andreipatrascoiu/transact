@@ -21,8 +21,6 @@
   
   function transferFunc(id, email, lat, lon, callback) {
 
-                debug("Here");
-
                 var postOptions = {
                     host: curierUrl,
                     port: '8080',
