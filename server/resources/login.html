@@ -1,31 +1,26 @@
 <html>
-<head>
-
-	<meta charset="UTF-8">
-	<title>Login</title>
-
-	<link rel='stylesheet' href='https://codepen.io/assets/libs/fullpage/jquery-ui.css'>
-	<link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-  <div class="login-card">
-    <h1>Log-in</h1><br>
-  <form method="post" action="login">
-    <input type="text" name="user" placeholder="Username" required>
-    <input type="password" name="pass" placeholder="Password" required>
-    <div id="error"></div>
-    <input type="button" onclick="login()" class="login login-submit" value="Login">
-  </form>
-
-  <div class="login-help">
-    <a href="/register">Register</a>
-    <a href="/">Skip</a>
-  </div>
-</div>
-  <script src='https://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
-  <script type="text/javascript" src="js/auth.js"></script>
-</body>
-
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel='stylesheet' href='https://codepen.io/assets/libs/fullpage/jquery-ui.css'>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="login-card">
+      <h1>Log-in</h1>
+      <br>
+      <form method="post" action="login">
+        <input type="text" name="user" placeholder="Username" required>
+        <input type="password" name="pass" placeholder="Password" required>
+        <div id="error"></div>
+        <input type="button" onclick="login()" class="login login-submit" value="Login">
+      </form>
+      <div class="login-help">
+        <a href="/register">Register</a>
+        <a href="/">Skip</a>
+      </div>
+    </div>
+    <script src='https://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
+    <script type="text/javascript" src="js/auth.js"></script>
+  </body>
 </html>

@@ -10,22 +10,22 @@ module.exports = function(grunt) {
     copy:
     {
         all:
-       {
-       files: [
-                    {
-                        expand: true,
-                        cwd: './',
-                        src: [ 'main.js'],
-                        dest: 'source'
-                    },
-                    {src: ['curier/curier.js'], dest: 'source/curier.js'},
-                    {src: ['db/db.js'], dest: 'source/db.js'},
-                    {src: ['easypay/easypay.js'], dest: 'source/easypay.js'},
-                    {src: ['google/google.js'], dest: 'source/google.js'},
-                    {src: ['server/server.js'], dest: 'source/server.js'}
-                ]
-            }
-       },
+        {
+            files: [
+                {
+                    expand: true,
+                    cwd: './',
+                    src: [ 'main.js'],
+                    dest: 'source'
+                },
+                {src: ['curier/curier.js'], dest: 'source/curier.js'},
+                {src: ['db/db.js'], dest: 'source/db.js'},
+                {src: ['easypay/easypay.js'], dest: 'source/easypay.js'},
+                {src: ['google/google.js'], dest: 'source/google.js'},
+                {src: ['server/server.js'], dest: 'source/server.js'}
+            ]
+        }
+    },
     uglify:
     {
         all:
@@ -58,8 +58,8 @@ module.exports = function(grunt) {
   });
 
   // Load the plugins that provide the tasks.
-  grunt.loadNpmTasks ('grunt-contrib-clean');
-  grunt.loadNpmTasks ('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsdoc');
 
